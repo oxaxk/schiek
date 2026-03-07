@@ -67,10 +67,6 @@ function loadDesignAssets() {
       id: 'fa-css',
       href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
     },
-    {
-      id: 'ri-css',
-      href: 'https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css',
-    },
   ];
 
   links.forEach((link) => {
@@ -123,9 +119,9 @@ export default function CookieBanner() {
     document
       .querySelectorAll('script[data-cookie="google-ads"]')
       .forEach((el) => el.remove());
-    // Remove optional design assets
+    // Remove optional design assets (only FontAwesome CDN)
     document
-      .querySelectorAll('link[data-id="fa-css"], link[data-id="ri-css"]')
+      .querySelectorAll('link[data-id="fa-css"]')
       .forEach((el) => el.remove());
     // Reset runtime flags
     (window as any).googleAdsLoaded = false;
