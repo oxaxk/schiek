@@ -73,9 +73,9 @@ export default function Datenschutz() {
             <p className="mb-4">
             Verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:<br /><br />
             <strong>Abschleppdienst Schiek</strong><br />
-            [Adresse hier einfügen]<br />
-            [PLZ Ort]<br />
-            Telefon: [Telefonnummer]<br />
+            Reinickendorfer Str. 87<br />
+            13347 Berlin<br />
+            Telefon: 0176 55677271<br />
             E-Mail: info@abschleppdienst-schiek.de
             </p>
 
