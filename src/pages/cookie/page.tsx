@@ -79,11 +79,11 @@ const CookieSettingsPage: React.FC = () => {
   const getStatusLabel = () => {
     switch (status) {
       case 'accepted':
-        return 'Alle Cookies akzeptiert (Session)';
+        return 'Alle optionalen Cookies akzeptiert.';
       case 'rejected':
-        return 'Nur notwendige Cookies (Session)';
+        return 'Nur technisch notwendige Cookies aktiv.';
       default:
-        return 'Noch keine Entscheidung für diese Session gespeichert.';
+        return 'Noch keine Cookie-Entscheidung gespeichert.';
     }
   };
 
@@ -110,11 +110,7 @@ const CookieSettingsPage: React.FC = () => {
             <p
               className="text-base sm:text-lg leading-relaxed text-[#0F172A]/85 mb-6"
             >
-              Hier kannst du deine Entscheidung zur Verwendung von Cookies für diese Browser-Session
-              anpassen. Technisch notwendige Cookies verwenden wir, um die Seite sicher zu
-              betreiben. Optionale Cookies und vergleichbare Technologien für Statistik oder Marketing – z.&nbsp;B.
-              Google&nbsp;Ads Conversion-Tracking für Anrufe und WhatsApp-Klicks sowie das Nachladen von Icon-Fonts (Font Awesome, Remix Icon) – setzen wir nur,
-              wenn du zustimmst.
+              Hier kannst du deine Entscheidung zur Verwendung von Cookies und ähnlichen Technologien anpassen. Technisch notwendige Cookies verwenden wir, um die Seite sicher und stabil zu betreiben. Optionale Technologien für Marketingzwecke – aktuell Google Ads Conversion-Tracking für Telefon‑Klicks – werden nur aktiviert, wenn du zustimmst. Ohne Zustimmung wird kein entsprechendes Tracking geladen.
             </p>
 
             <div className="mb-8 rounded-3xl border border-[#0F3D8C]/15 bg-white px-6 py-5 shadow-[0_10px_25px_rgba(15,23,42,0.06)]">
