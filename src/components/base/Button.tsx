@@ -38,14 +38,14 @@ export default function Button({
   const classes = `${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`;
   
   if (href) {
-    const isExternal = href.startsWith('http');
+    const isExternal = /^(https?:)?\/\//.test(href);
 
     return (
       <a
         href={href}
         className={classes}
         {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-        onClick={() => {
+        onClick={(e) => {
           if (
             gaSendTo &&
             typeof window !== 'undefined' &&
@@ -54,6 +54,10 @@ export default function Button({
             (window as any).gtag('event', 'conversion', {
               send_to: gaSendTo,
             });
+          }
+
+          if (rest.onClick) {
+            (rest.onClick as any)(e);
           }
         }}
       >
