@@ -1,211 +1,97 @@
-// File: src/pages/cookie/page.tsx
-import { useEffect, useState } from 'react';
-import Header from '../../components/feature/Header';
-import Footer from '../../components/feature/Footer';
-import Button from '../../components/base/Button';
-
-type ConsentStatus = 'accepted' | 'rejected' | 'unset';
-
-const STORAGE_KEY = 'cookie-consent-v1';
-
-const GOOGLE_ADS_ID = import.meta.env.VITE_GOOGLE_ADS_ID as string | undefined;
-
-function loadGoogleAdsTag() {
-  if (!GOOGLE_ADS_ID) return;
-  if (typeof window === 'undefined') return;
-
-  if ((window as any).googleAdsLoaded) {
-    return;
-  }
-
-  (window as any).googleAdsLoaded = true;
-
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`;
-  script.setAttribute('data-cookie', 'google-ads');
-  document.head.appendChild(script);
-
-  const inline = document.createElement('script');
-  inline.type = 'text/javascript';
-  inline.textContent =
-    "window.dataLayer = window.dataLayer || [];" +
-    "function gtag(){dataLayer.push(arguments);} " +
-    "gtag('consent', 'default', { ad_storage: 'granted', analytics_storage: 'denied' });" +
-    "gtag('js', new Date());" +
-    "gtag('config', '" + GOOGLE_ADS_ID + "', { anonymize_ip: true });";
-  inline.setAttribute('data-cookie', 'google-ads');
-  document.head.appendChild(inline);
-}
-
-const CookieSettingsPage: React.FC = () => {
-  const [status, setStatus] = useState<ConsentStatus>('unset');
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored === 'accepted' || stored === 'rejected') {
-      setStatus(stored);
-    } else {
-      setStatus('unset');
-    }
-  }, []);
-
-  const handleAccept = () => {
-    if (typeof window === 'undefined') return;
-    window.localStorage.setItem(STORAGE_KEY, 'accepted');
-    setStatus('accepted');
-    loadGoogleAdsTag();
-  };
-
-  const handleReject = () => {
-    if (typeof window === 'undefined') return;
-    window.localStorage.setItem(STORAGE_KEY, 'rejected');
-    setStatus('rejected');
-
-    document
-      .querySelectorAll('script[data-cookie="google-ads"]')
-      .forEach((el) => el.remove());
-
-    (window as any).googleAdsLoaded = false;
-  };
-
-  const handleReset = () => {
-    if (typeof window === 'undefined') return;
-    window.localStorage.removeItem(STORAGE_KEY);
-    setStatus('unset');
-  };
-
-  const getStatusLabel = () => {
-    switch (status) {
-      case 'accepted':
-        return 'Alle optionalen Cookies akzeptiert.';
-      case 'rejected':
-        return 'Nur technisch notwendige Cookies aktiv.';
-      default:
-        return 'Noch keine Cookie-Entscheidung gespeichert.';
-    }
-  };
-
+export default function Footer() {
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <Header />
-
-      <main className="flex-1 pt-24 pb-20 bg-white">
-        <section className="py-12 sm:py-16 bg-white" aria-labelledby="cookie-heading">
-          <div className="max-w-4xl mx-auto px-6">
-            <p
-              className="text-xs tracking-[0.22em] uppercase mb-4 text-[#0F3D8C]"
-            >
-              Cookies &amp; Tracking
-            </p>
-
-            <h1
-              id="cookie-heading"
-              className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-4 leading-tight text-[#0F172A]"
-            >
-              Cookie-Einstellungen
-            </h1>
-
-            <p
-              className="text-base sm:text-lg leading-relaxed text-[#0F172A]/85 mb-6"
-            >
-              Hier kannst du deine Entscheidung zur Verwendung von Cookies und ähnlichen Technologien anpassen. Technisch notwendige Cookies verwenden wir, um die Seite sicher und stabil zu betreiben. Optionale Technologien für Marketingzwecke – aktuell Google Ads Conversion-Tracking für Telefon‑Klicks – werden nur aktiviert, wenn du zustimmst. Ohne Zustimmung wird kein entsprechendes Tracking geladen.
-            </p>
-
-            <div className="mb-8 rounded-3xl border border-[#0F3D8C]/15 bg-white px-6 py-5 shadow-[0_10px_25px_rgba(15,23,42,0.06)]">
-              <h2
-                className="text-sm md:text-base font-medium mb-2 text-[#0F172A]"
+    <footer className="py-14 bg-[#020617] text-slate-100 border-t border-slate-800/80">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
+          {/* Logo & Description */}
+          <div className="md:col-span-2 flex flex-col items-center md:items-start">
+            <a href="/" aria-label="Startseite Abschleppdienst Schiek" className="mb-4 flex flex-col items-center md:items-start gap-1">
+              <span
+                className="text-xl md:text-[1.7rem] font-semibold tracking-[0.28em] uppercase"
               >
-                Aktueller Status
-              </h2>
-              <p
-                className="text-sm md:text-base text-[#0F172A]/85"
+                SCHIEK
+              </span>
+              <span
+                className="text-[0.65rem] md:text-[0.75rem] tracking-[0.22em] uppercase text-sky-300/90"
               >
-                {getStatusLabel()}
-              </p>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="rounded-3xl border border-[#0F3D8C]/15 bg-white px-5 py-5 shadow-[0_10px_25px_rgba(15,23,42,0.06)]">
-                <h3
-                  className="text-xs tracking-[0.18em] uppercase mb-2 text-[#0F3D8C]"
-                >
-                  Nur notwendige Cookies
-                </h3>
-                <p
-                  className="text-sm text-[#0F172A]/85 mb-4"
-                >
-                  Es werden nur Cookies eingesetzt, die für den technischen Betrieb der Seite
-                  erforderlich sind. Keine Statistik- oder Marketing-Cookies.
-                </p>
-                <Button
-                  size="sm"
-                  onClick={handleReject}
-                  className="w-full text-[0.7rem] sm:text-xs tracking-[0.18em] uppercase px-4 py-2.5 rounded-full"
-                >
-                  Auswahl speichern
-                </Button>
-              </div>
-
-              <div className="rounded-3xl border border-[#0F3D8C]/15 bg-white px-5 py-5 shadow-[0_10px_25px_rgba(15,23,42,0.06)]">
-                <h3
-                  className="text-xs tracking-[0.18em] uppercase mb-2 text-[#0F3D8C]"
-                >
-                  Alle Cookies akzeptieren
-                </h3>
-                <p
-                  className="text-sm text-[#0F172A]/85 mb-4"
-                >
-                  Optional erlaubst du zusätzlich Cookies für Statistik und Marketing, sofern wir
-                  solche Tools einsetzen.
-                </p>
-                <Button
-                  size="sm"
-                  onClick={handleAccept}
-                  className="w-full text-[0.7rem] sm:text-xs tracking-[0.18em] uppercase px-4 py-2.5 rounded-full"
-                >
-                  Alle akzeptieren
-                </Button>
-              </div>
-
-              <div className="rounded-3xl border border-[#0F3D8C]/15 bg-white px-5 py-5 shadow-[0_10px_25px_rgba(15,23,42,0.06)]">
-                <h3
-                  className="text-xs tracking-[0.18em] uppercase mb-2 text-[#0F3D8C]"
-                >
-                  Entscheidung zurücksetzen
-                </h3>
-                <p
-                  className="text-sm text-[#0F172A]/85 mb-4"
-                >
-                  Löscht die aktuelle Entscheidung für diese Session. Beim nächsten Seitenaufruf
-                  erscheint das Cookie-Banner erneut.
-                </p>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={handleReset}
-                  className="w-full text-[0.7rem] sm:text-xs tracking-[0.18em] uppercase px-4 py-2.5 rounded-full"
-                >
-                  Entscheidung löschen
-                </Button>
-              </div>
-            </div>
-
-            <p
-              className="mt-8 text-xs sm:text-sm text-[#0F172A]/70"
-            >
-              Hinweis: Diese Seite ersetzt keine rechtliche Beratung. Für individuelle Anforderungen
-              (z. B. bei komplexen Tracking-Setups, E-Commerce oder mehreren Drittanbietern) kann es
-              sinnvoll sein, eine auf IT-Recht spezialisierte Kanzlei einzubeziehen.
+                24/7 ABSCHLEPP- &amp; BERGUNGSDIENST
+              </span>
+            </a>
+            <p className="text-slate-300/80 mb-6 max-w-md text-sm md:text-base">
+              Abschlepp- &amp; Bergungsdienst Schiek – privater Abschleppdienst für 24/7 Pannenhilfe, Unfallbergung und Falschparker auf Privatparkplätzen und Einfahrten in Berlin und Umgebung.
             </p>
+            <div className="flex space-x-4 justify-center md:justify-start">
+              <a 
+                href="tel:+4917655677271"
+                aria-label="Telefon anrufen"
+                className="w-10 h-10 rounded-full flex items-center justify-center bg-[#0F172A] border border-sky-400/70 shadow-[0_12px_32px_rgba(15,23,42,0.8)] hover:bg-[#1E293B] hover:border-sky-300 transition-colors"
+              >
+                <i aria-hidden="true" className="ri-phone-line text-sky-300 text-lg"></i>
+              </a>
+              <a 
+                href="mailto:info@abschleppdienst-schiek.de"
+                aria-label="E-Mail schreiben"
+                className="w-10 h-10 rounded-full flex items-center justify-center bg-[#0F172A] border border-slate-500/80 shadow-[0_12px_32px_rgba(15,23,42,0.8)] hover:bg-[#1E293B] hover:border-sky-300 transition-colors"
+              >
+                <i aria-hidden="true" className="ri-mail-line text-slate-100 text-lg"></i>
+              </a>
+            </div>
           </div>
-        </section>
-      </main>
 
-      <Footer />
-    </div>
+          {/* Quick Links */}
+          <div className="flex flex-col items-center md:items-start">
+            <h4
+              className="font-semibold text-xl md:text-2xl mb-4"
+            >
+              Quick Links
+            </h4>
+            <ul className="space-y-2">
+              <li>
+                <a href="/#hero" className="text-slate-400 hover:text-sky-300 transition-colors">
+                  Home
+                </a>
+              </li>
+              <li>
+                <a href="/about" className="text-slate-400 hover:text-sky-300 transition-colors">
+                  Über uns
+                </a>
+              </li>
+              <li>
+                <a href="/leistungen" className="text-slate-400 hover:text-sky-300 transition-colors">
+                  Leistungen
+                </a>
+              </li>
+              <li>
+                <a href="/kontakt" className="text-slate-400 hover:text-sky-300 transition-colors">
+                  Kontakt
+                </a>
+              </li>
+              <li>
+                <a href="/faq" className="text-slate-400 hover:text-sky-300 transition-colors">
+                  FAQ
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="border-t border-slate-800 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-slate-400 text-xs md:text-sm text-center md:text-left">
+            © 2026 Abschleppdienst Schiek. Alle Rechte vorbehalten.
+          </p>
+          <div className="flex space-x-6 mt-4 md:mt-0 justify-center md:justify-end">
+            <a href="/impressum" className="text-slate-400 hover:text-sky-300 text-xs md:text-sm transition-colors">
+              Impressum
+            </a>
+            <a href="/datenschutz" className="text-slate-400 hover:text-sky-300 text-xs md:text-sm transition-colors">
+              Datenschutz
+            </a>
+            <a href="/cookie" className="text-slate-400 hover:text-sky-300 text-xs md:text-sm transition-colors">
+              Cookie-Einstellungen
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
   );
-};
-
-export default CookieSettingsPage;
+}
